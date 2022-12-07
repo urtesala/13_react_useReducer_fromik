@@ -1,6 +1,6 @@
 import './App.css'
 import Counter from './components/counter/Counter'
-import RegisterForm from './components/counter/RegisterForm'
+import RegisterForm from './components/RegisterForm'
 import './reset.css'
 
 function App() {
