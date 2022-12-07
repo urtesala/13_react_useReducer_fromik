@@ -1,31 +1,31 @@
-import { useReducer } from 'react';
+import { useReducer, useState } from 'react';
 
 const initFormValues = {
   email: '',
   password: '',
   repeatPassword: '',
+  feedback: '',
+  doPasswordsMatch: false,
 };
-// prisideti argumentus,
 // sukurti switch
 // padaryti kad email reiksme susipildytu ivedant
 function registerReducer(state, action) {
+  console.log('action ===', action);
   switch (action.type) {
+    case 'passMatch':
+      const arePassTheSame = state.password === state.repeatPassword;
+      return { ...state, doPasswordsMatch: arePassTheSame };
+    case 'feedback':
+      return { ...state, feedback: action.payload };
     case 'email':
       return {
         ...state,
         email: action.payload,
       };
     case 'password':
-      return {
-        ...state,
-        password: action.payload,
-      };
+      return { ...state, password: action.payload };
     case 'repeatPassword':
-      return {
-        ...state,
-        repeatPassword: action.payload,
-      };
-
+      return { ...state, repeatPassword: action.payload };
     default:
       console.warn('tokio tipo action nera');
       return initFormValues;
@@ -34,11 +34,23 @@ function registerReducer(state, action) {
 
 function RegisterForm(props) {
   const [state, dispatch] = useReducer(registerReducer, initFormValues);
+  // const [doPasswordsMatch, setDoPasswordsMatch] = useState(false);
 
   const submitHandler = (e) => {
     // padaryti kad forma neperkrautu psl
+    e.preventDefault();
     // patikrinti ar sutampa slaptazodziai
+    dispatch({ type: 'passMatch' });
     // pranesti vartotojui ar sutampa ar ne su tekstu virs formos
+
+    if (state.doPasswordsMatch) {
+      dispatch({ type: 'feedback', payload: 'Passwords match OK' });
+    } else {
+      dispatch({
+        type: 'feedback',
+        payload: 'please check passwords do not match!!!',
+      });
+    }
   };
 
   return (
@@ -51,6 +63,7 @@ function RegisterForm(props) {
           type='text'
           placeholder='email'
         />
+        <h3>{state.feedback}</h3>
         <input
           onChange={(e) =>
             dispatch({ type: 'password', payload: e.target.value })
@@ -76,6 +89,7 @@ function RegisterForm(props) {
           <p>Email: {state.email}</p>
           <p>Password: {state.password}</p>
           <p>Repeat Password: {state.repeatPassword}</p>
+          <p>Do they match: {state.doPasswordsMatch.toString()}</p>
         </>
       )}
     </div>
