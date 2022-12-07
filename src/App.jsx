@@ -1,10 +1,13 @@
 import './App.css'
+import Counter from './components/counter/Counter'
+import RegisterForm from './components/counter/RegisterForm'
 import './reset.css'
 
 function App() {
   return (
     <div className="App container">
-      <h1>React</h1>
+      <Counter/>
+      <RegisterForm/>
     </div>
   )
 }
